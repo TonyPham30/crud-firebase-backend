@@ -24,7 +24,9 @@ app.get("/", async (req, res) => {
                 const blogDetail = {
                     id: doc.data().id,
                     title: doc.data().title,
-                    content: doc.data().content
+                    content: doc.data().content,
+                    userName:doc.data().user,
+                    dateTime: doc.data().dateTime
                 }
                 responseData.push(blogDetail)
             })
@@ -46,6 +48,8 @@ app.post("/create-blog", async (req, res) => {
             id: Date.now(),
             title: req.body.title,
             content: req.body.content,
+            user: req.body.userName,
+            dateTime: Date.now()
         })
         return res.status(200).json({
             message: "create blog successfully",
