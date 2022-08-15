@@ -79,4 +79,36 @@ app.get("/blog/:id",async (req, res) => {
         })
     }
 })
+// update blog with id
+
+app.put("/update/:id", async(req, res) => {
+    try {
+        const reqDoc= database.collection("blog").doc(req.params.id)
+        await reqDoc.update({
+            title: req.body.title,
+            content: req.body.content,
+        })
+        return res.status(200).json({
+            message: "blog updated",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message:error,
+        })
+    }
+})
+// delete blog with id
+app.delete("/delete/:id",async (req, res) => {
+    try {
+        const reqDoc = database.collection("blog").doc(req.params.id)
+        await reqDoc.delete()
+        return res.status(200).json({
+            message: "deleted",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error
+        })
+    }
+})
 exports.app = functions.https.onRequest(app)
