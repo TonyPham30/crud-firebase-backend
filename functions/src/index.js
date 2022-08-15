@@ -3,7 +3,8 @@ const admin = require("firebase-admin");
 const serviceAccount = require("../serviceAccount.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://fir-training-c0b22-default-rtdb.asia-southeast1.firebasedatabase.app"
 });
 const express = require("express");
 const cors = require("cors")
@@ -34,7 +35,7 @@ app.get("/", async (req, res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            message:error,
+            message: error,
         })
     }
 })
@@ -47,22 +48,23 @@ app.post("/create-blog", async (req, res) => {
             content: req.body.content,
         })
         return res.status(200).json({
-            message:"create blog successfully",
+            message: "create blog successfully",
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
-            message:error,
+            message: error,
         })
     }
 })
 
 // get blog with id
-app.get("/blog/:id",async (req, res) => {
+app.get("/blog/:id", async (req, res) => {
     try {
         const reqDoc = database.collection("blog").doc(req.params.id)
         let blogDetail = await reqDoc.get()
         let responseBlog = blogDetail.data()
-        if(responseBlog) {
+        if (responseBlog) {
             return res.status(200).json({
                 message: "find successfully blog",
                 blog: responseBlog
@@ -75,15 +77,15 @@ app.get("/blog/:id",async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(500).json({
-            message:error,
+            message: error,
         })
     }
 })
 // update blog with id
 
-app.put("/update/:id", async(req, res) => {
+app.put("/update/:id", async (req, res) => {
     try {
-        const reqDoc= database.collection("blog").doc(req.params.id)
+        const reqDoc = database.collection("blog").doc(req.params.id)
         await reqDoc.update({
             title: req.body.title,
             content: req.body.content,
@@ -93,12 +95,12 @@ app.put("/update/:id", async(req, res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            message:error,
+            message: error,
         })
     }
 })
 // delete blog with id
-app.delete("/delete/:id",async (req, res) => {
+app.delete("/delete/:id", async (req, res) => {
     try {
         const reqDoc = database.collection("blog").doc(req.params.id)
         await reqDoc.delete()
